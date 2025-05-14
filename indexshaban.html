@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TikTok Fake Gift Sender</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .container {
+      background: #1c1c1c;
+      padding: 20px;
+      border-radius: 15px;
+      display: inline-block;
+      margin-top: 20px;
+      width: 90%;
+      max-width: 420px;
+    }
+
+    input, select, button {
+      padding: 12px;
+      margin: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      width: 80%;
+      box-sizing: border-box;
+    }
+
+    input, select {
+      background-color: #2a2a2a;
+      color: #fff;
+    }
+
+    button {
+      background-color: #ff2d55;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff5e78;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 1.1rem;
+    }
+
+    .leaderboard {
+      background-color: #121212;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .leaderboard h2 {
+      color: #ff2d55;
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    .leaderboard ol {
+      padding-left: 20px;
+    }
+
+    .leaderboard li {
+      margin: 5px 0;
+    }
+
+    strong {
+      color: #ff2d55;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎁 TikTok Gift Sender (Fake)</h1>
+  <div class="container">
+    <input type="text" id="sender" placeholder="@yourusername" />
+    <br>
+    <input type="text" id="receiver" placeholder="@friendusername" />
+    <br>
+    <select id="gift">
+      <option value="1|🥀|Rose">🥀 Rose (1 coin)</option>
+      <option value="5|🎤|Mic">🎤 Mic (5 coins)</option>
+      <option value="50|🐶|Dog">🐶 Dog (50 coins)</option>
+      <option value="300|🦁|Lion">🦁 Lion (300 coins)</option>
+      <option value="1000|🌌|Universe">🌌 Universe (1000 coins)</option>
+    </select>
+    <br>
+    <button onclick="sendGift()">Send Gift</button>
+    <div class="message" id="message"></div>
+  </div>
+
+  <div class="leaderboard" id="leaderboard">
+    <h2>🏆 Top Receivers</h2>
+    <ol id="leaderboardList"></ol>
+  </div>
+
+  <audio id="coinSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_7b611bbf50.mp3" preload="auto"></audio>
+
+  <script>
+    let senderLevel = 49;
+
+    let leaderboardData = [
+      { user: "@charli_damelio", coins: 2000 },
+      { user: "@x6.vii.23", coins: 1500 },
+      { user: "@coolguy", coins: 800 },
+    ];
+
+    function renderLeaderboard() {
+      const list = document.getElementById("leaderboardList");
+      list.innerHTML = "";
+      leaderboardData
+        .sort((a, b) => b.coins - a.coins)
+        .slice(0, 10)
+        .forEach(entry => {
+          list.innerHTML += `<li><strong>${entry.user}</strong>: ${entry.coins.toLocaleString()} coins</li>`;
+        });
+    }
+
+    function sendGift() {
+      const sender = document.getElementById("sender").value.trim();
+      const receiver = document.getElementById("receiver").value.trim();
+      const giftData = document.getElementById("gift").value;
+      const message = document.getElementById("message");
+      const sound = document.getElementById("coinSound");
+
+      if (!sender || !receiver || !sender.startsWith("@") || !receiver.startsWith("@")) {
+        message.innerHTML = "⚠️ Please enter valid usernames starting with '@'.";
+        return;
+      }
+
+      const [value, emoji, label] = giftData.split("|");
+      const coins = parseInt(value);
+
+      // Display the message
+      message.innerHTML = `✅ <strong>${sender}</strong> <span style="color:#888;">(Lv.${senderLevel})</span> sent a ${emoji} <strong>${label}</strong> to <strong>${receiver}</strong> (${coins} coins)`;
+      sound.play();
+
+      // Add to leaderboard
+      const existing = leaderboardData.find(entry => entry.user === receiver);
+      if (existing) {
+        existing.coins += coins;
+      } else {
+        leaderboardData.push({ user: receiver, coins: coins });
+      }
+
+      renderLeaderboard();
+    }
+
+    renderLeaderboard();
+  </script>
+</body>
+</html>
